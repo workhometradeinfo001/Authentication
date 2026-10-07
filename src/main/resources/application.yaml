@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Authentication
+  config:
+    import:
+      - "classpath:templates/application-redis.yaml"
+      - "classpath:templates/application-oauthgoogle.yaml"
+      - "classpath:templates/application-mongodb.yaml"
+      - "classpath:templates/application-facebook.yaml"
+      - "classpath:variables/application-variables.yaml"
+      - "classpath:templates/application-linkedin.yaml"
+
+server:
+  port: 8181
