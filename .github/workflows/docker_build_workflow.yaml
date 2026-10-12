@@ -1,0 +1,20 @@
+name: Docker_Build_Push
+
+on:
+  workflow_run:
+    workflows:
+      - Authentication_Test
+    types:
+      - completed
+
+jobs:
+  build-store:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: checkout the code
+        uses: actions/checkout@v4
+
+      - name: Docker Build
+        run: docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_VERSION_ONE }}
+
