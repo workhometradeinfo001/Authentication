@@ -17,3 +17,14 @@ jobs:
 
       - name: Docker Build
         run: docker build -f .github/workflows/docker.dockerfile -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${{secrets.IMAGE_VERSION_ONE}} .
+
+      - name: Login to Azure Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Push Docker image
+        run: |
+          docker push ${{secrets.ACR_LOGIN_SERVER}}/${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_VERSION_ONE}}
