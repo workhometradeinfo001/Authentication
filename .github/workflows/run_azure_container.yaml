@@ -1,0 +1,58 @@
+name: Run_Auth_Image_Into_Container
+
+on:
+  workflow_run:
+    workflows:
+      - Docker_Build_Push
+    types:
+      - completed
+
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    if: ${{github.event.workflow_run.conclusion == 'success'}}
+    steps:
+      - name: Login Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{secrets.AZURE_CLIENT_ID}}
+          tenant-id: ${{secrets.AZURE_TENANT_ID}}
+          subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+
+      - name: Create environment if didn't create yet
+        run: |
+          if az containerapp env show --name togo-environment --resource-group ${{ secrets.ACR_RESOURCE_GROUP }} > /dev/null 2>&1; then
+            echo "Environment exits, Skipping environment creation"
+          else 
+            echo "Environment doesn't exists, Creating..."
+            az containerapp env create \
+            --name togo-environment \
+            --resource-group ${{ secrets.ACR_RESOURCE_GROUP }} \
+            --location southeastasia
+          fi
+
+      - name: Deploy into container
+        run: |
+          az containerapp up \
+          --name auth-container \
+          --resource-group ${{ secrets.ACR_RESOURCE_GROUP }} \
+          --environment togo-environment \
+          --location southeastasia \
+          --image ${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_VERSION_ONE }} \
+          --registry-server ${{ secrets.ACR_LOGIN_SERVER }} \
+          --registry-username ${{ secrets.ACR_USERNAME }} \
+          --registry-password ${{ secrets.ACR_PASSWORD }} \
+          --target-port 8181 \
+          --ingress external \
+          --env-vars \
+            FB_ID_MANUAL="${{secrets.FB_ID_MANUAL}}" \
+            FB_SECRET_MANUAL="${{secrets.FB_SECRET_MANUAL}}" \
+            JWT_SECRET="${{secrets.JWT_SECRET}}" \
+            REDIS_URL="${{secrets.REDIS_URL}}" \
+            GOOGLE_ID="${{secrets.GOOGLE_ID}}" \
+            GOOGLE_SECRET="${{ secrets.GOOGLE_SECRET }}" \
+            MONGODB_URI="${{ secrets.MONGODB_URI }}" \
+            LINKEDIN_ID="${{ secrets.LINKEDIN_ID }}" \
+            LINKEDIN_SECRET="${{ secrets.LINKEDIN_SECRET }}" \
+            FB_ID="${{ secrets.FB_ID }}" \
+            FB_SECRET="${{ secrets.FB_SECRET }}"
