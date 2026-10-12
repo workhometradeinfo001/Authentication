@@ -20,6 +20,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Give permission to mvnw
+        run: chmod +x mvnw
+
       - name: Build with mvn wrapper
         run: ./mvnw clean package -DskipTests -X
 
