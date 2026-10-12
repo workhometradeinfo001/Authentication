@@ -16,5 +16,5 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Docker Build
-        run: docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_VERSION_ONE }}
+        run: docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_VERSION_ONE }} .
 
