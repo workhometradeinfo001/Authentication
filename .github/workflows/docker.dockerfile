@@ -14,6 +14,6 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar authentication.jar
 
 EXPOSE 8181
-ENTRYPOINT["java", "-jar", "authentication.jar"]
+ENTRYPOINT ["java", "-jar", "authentication.jar"]
 
 
