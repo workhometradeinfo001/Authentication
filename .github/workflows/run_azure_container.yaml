@@ -59,4 +59,5 @@ jobs:
             LINKEDIN_SECRET="${{ secrets.LINKEDIN_SECRET }}" \
             FB_ID="${{ secrets.FB_ID }}" \
             FB_SECRET="${{ secrets.FB_SECRET }}" \
-            CLOUD_HOST="${{secrets.CLOUD_HOST}}"
+            CLOUD_HOST="${{secrets.CLOUD_HOST}}"\
+            LOCAL_HOST="${{secrets.LOCAL_HOST}}"
