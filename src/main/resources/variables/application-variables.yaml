@@ -5,3 +5,9 @@ app:
   jwt:
     secret: ${JWT_SECRET}
     expiration-ms: 86400000
+
+cors:
+  local:
+    host: ${LOCAL_HOST}
+  cloud:
+    host: ${CLOUD_HOST}

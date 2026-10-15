@@ -1,5 +1,6 @@
 package org.togo.authentication.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,11 @@ import java.util.Map;
 @Configuration
 public class SpringSecurity {
 
+    @Value("${cors.local.host}")
+    private String localHost;
+    @Value("${cors.cloud.host}")
+    private String cloudHost;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    ClientRegistrationRepository clientRegistrationRepository
@@ -41,14 +47,16 @@ public class SpringSecurity {
                                         .authorizationEndpoint(authorization -> authorization.authorizationRequestResolver(
                                         customAuthorizationRequestResolver(clientRegistrationRepository)
                                 ))
-                                .defaultSuccessUrl("http://localhost:5173/?auth=callback", true)
+                                .defaultSuccessUrl(localHost+"/?auth=callback", true)
+                                        .failureUrl(localHost)
                 );
             return http.build();
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173"));
+        configuration.setAllowedOriginPatterns(List.of(localHost,
+                cloudHost));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
