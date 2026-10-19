@@ -1,13 +1,17 @@
 package org.togo.authentication.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -22,6 +26,8 @@ public class ManualJWTService {
 
     @Value("${app.jwt.expiration-ms}")
     private long jwtExpirationMs;
+
+    private final StringRedisTemplate redisTemplate;
 
     public String createManualJWT(String email){
         Instant now = Instant.now();
@@ -52,5 +58,25 @@ public class ManualJWTService {
                 .parseSignedClaims(jwt)
                 .getPayload();
     }
+
+    public boolean saveManualJWTIntoRedis(String token, String email) throws JsonProcessingException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Claims decodeTheToken = getDecodeTheToken(token);
+            Map<String, ? extends Serializable> obj = Map.of(
+                    "Manual_Token", token,
+                    "Issue_At", decodeTheToken.getIssuedAt(),
+                    "Expire_At", decodeTheToken.getExpiration(),
+                    "Login_With", "Manual"
+            );
+            String s = objectMapper.writeValueAsString(obj);
+            redisTemplate.opsForValue().set(email, s);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
+    }
+
 
 }
