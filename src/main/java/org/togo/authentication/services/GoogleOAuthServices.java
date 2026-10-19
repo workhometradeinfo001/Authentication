@@ -62,7 +62,7 @@ public class GoogleOAuthServices {
         );
         try {
             String s = objectMapper.writeValueAsString(obj);
-            redisTemplate.opsForValue().set(email, s);
+            redisTemplate.opsForValue().set(email, s, Duration.ofDays(7));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

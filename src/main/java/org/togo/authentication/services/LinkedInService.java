@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class LinkedInService {
                 "Login_With", "LinkedIn"
         );
         String objToString = objectMapper.writeValueAsString(obj);
-        redisTemplate.opsForValue().set(email, objToString);
+        redisTemplate.opsForValue().set(email, objToString, Duration.ofDays(7));
         return true;
     }
 

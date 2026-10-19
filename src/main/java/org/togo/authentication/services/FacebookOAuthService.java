@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.togo.authentication.entity.LongLiveTokenEntity;
 import org.togo.authentication.repo.mongodb.FbMongoRepo;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class FacebookOAuthService {
                 "Login_With", "Facebook"
         );
         String objString = objectMapper.writeValueAsString(obj);
-        redisTemplate.opsForValue().set(email, objString);
+        redisTemplate.opsForValue().set(email, objString, Duration.ofDays(7));
         return true;
     }
 

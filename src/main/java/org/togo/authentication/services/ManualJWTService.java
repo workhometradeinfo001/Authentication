@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -70,7 +71,7 @@ public class ManualJWTService {
                     "Login_With", "Manual"
             );
             String s = objectMapper.writeValueAsString(obj);
-            redisTemplate.opsForValue().set(email, s);
+            redisTemplate.opsForValue().set(email, s, Duration.ofDays(7));
             return true;
         }catch (Exception e){
             return false;
