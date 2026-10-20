@@ -28,11 +28,10 @@ public class GoogleOAuthController {
     private final GoogleOAuthServices services;
 
     @GetMapping("/token")
-    public Map<String, Serializable> getAccessToken(@RegisteredOAuth2AuthorizedClient("google")
+    public String getAccessToken(@RegisteredOAuth2AuthorizedClient("google")
                                                         OAuth2AuthorizedClient client,
                                                     @AuthenticationPrincipal OAuth2User user
     ){
-        Instant thirtyDays = Instant.now().plus(Duration.ofDays(30));
         try {
             OAuth2AccessToken accessToken = client.getAccessToken();
             OAuth2RefreshToken refreshToken = client.getRefreshToken();
@@ -47,22 +46,12 @@ public class GoogleOAuthController {
                     refreshToken.getTokenValue(),
                     refreshToken.getIssuedAt(),
                     refreshToken.getExpiresAt());
-            Instant expiresAt = refreshToken.getExpiresAt();
-            Instant finalRtExpireDate = expiresAt == null ? thirtyDays : expiresAt;
             services.saveAtOnRedis(accessToken.getTokenValue(), email,
                     accessToken.getExpiresAt(), "Google");
-            return result ? Map.of(
-                    "Token_Type", accessToken.getTokenType(),
-                    "Access_Token", accessToken.getTokenValue(),
-                    "AT_Issue_Date", accessToken.getIssuedAt(),
-                    "AT_Expire_Date", accessToken.getExpiresAt(),
-                    "Refresh_Token", refreshToken.getTokenValue(),
-                    "RT_Issue_Date", refreshToken.getIssuedAt(),
-                    "RT_Expire_Date", finalRtExpireDate
-            ): null;
+            return result ? email : null;
         }catch (Exception e){
             log.error("Something wrong!", e);
-            return Collections.emptyMap();
+            return null;
         }
 
     }

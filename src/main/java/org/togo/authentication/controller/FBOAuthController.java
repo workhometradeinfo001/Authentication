@@ -32,11 +32,11 @@ public class FBOAuthController {
         boolean b = fbService.saveIntoMongoLLT(email, longLiveToken);
         if (b){
             boolean result = fbService.saveIntoRedis(email, shortLiveToken);
-            if (result) return longLiveToken;
-            else return "";
+            if (result) return email;
+            else return null;
         }else {
             log.error("Something wrong!!!!");
-            return "";
+            return null;
         }
     }
 

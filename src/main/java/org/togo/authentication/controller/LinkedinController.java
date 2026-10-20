@@ -22,7 +22,7 @@ public class LinkedinController {
     private final LinkedInService services;
 
     @GetMapping("/api/token")
-    public boolean linkedinLogin(
+    public String linkedinLogin(
             @RegisteredOAuth2AuthorizedClient("linkedin")OAuth2AuthorizedClient authorizedClient,
             @AuthenticationPrincipal OAuth2User user
             ) throws NullPointerException, JsonProcessingException {
@@ -34,7 +34,8 @@ public class LinkedinController {
         assert accessToken != null;
         Instant issuedAt = authorizedClient.getAccessToken().getIssuedAt();
         Instant expiresAt = authorizedClient.getAccessToken().getExpiresAt();
-        return services.saveLATIntoRedis(email, accessToken, issuedAt, expiresAt);
+        boolean b = services.saveLATIntoRedis(email, accessToken, issuedAt, expiresAt);
+        return b ? email : null;
     }
 
 
