@@ -66,8 +66,8 @@ public class ManualJWTService {
             Claims decodeTheToken = getDecodeTheToken(token);
             Map<String, ? extends Serializable> obj = Map.of(
                     "Manual_Token", token,
-                    "Issue_At", decodeTheToken.getIssuedAt(),
-                    "Expire_At", decodeTheToken.getExpiration(),
+                    "Issue_Date", decodeTheToken.getIssuedAt(),
+                    "Expire_Date", decodeTheToken.getExpiration(),
                     "Login_With", "Manual"
             );
             String s = objectMapper.writeValueAsString(obj);

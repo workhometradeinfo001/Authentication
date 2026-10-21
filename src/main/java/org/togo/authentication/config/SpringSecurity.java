@@ -37,7 +37,7 @@ public class SpringSecurity {
                 req
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
-                        "/oauth/**", "/fb/**", "/linkedin/**", "/jwt/**"
+                        "/oauth/**", "/fb/**", "/linkedin/**", "/jwt/**", "/gToken/**"
                 ).permitAll()
                         .anyRequest().authenticated()
         )
