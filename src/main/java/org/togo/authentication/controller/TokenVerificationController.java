@@ -12,7 +12,7 @@ import org.togo.authentication.DTO.TokenVerificationDTO;
 import org.togo.authentication.services.TokenVerificationService;
 
 @RestController
-@RequestMapping("gToken")
+@RequestMapping("/gToken")
 @RequiredArgsConstructor
 public class TokenVerificationController {
 
