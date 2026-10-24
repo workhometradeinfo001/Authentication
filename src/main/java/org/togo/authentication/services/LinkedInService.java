@@ -18,7 +18,8 @@ public class LinkedInService {
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public boolean saveLATIntoRedis(String email, String accessToken, Instant iDate, Instant eDate) throws JsonProcessingException {
+    public boolean saveLATIntoRedis(String email, String accessToken, Instant iDate, Instant eDate)
+            throws JsonProcessingException {
         Map<String, ? extends Serializable> obj = Map.of(
                 "Access_Token", accessToken,
                 "Issue_Date", iDate,

@@ -41,17 +41,9 @@ public class TokenVerificationService {
                         String fbToken = stringStringMap.get("Short_Live_Token");
                         yield loginWithFB(fbToken);
                     }
-                    case "Google" -> {
+                    case "Google", "LinkedIn", "Manual" -> {
                         Instant expireDateG = Instant.parse(stringStringMap.get("Expire_Date"));
                         yield verifyExpirationOfDate(expireDateG);
-                    }
-                    case "LinkedIn" -> {
-                        Instant expireDateL = Instant.parse(stringStringMap.get("Expire_Date"));
-                        yield verifyExpirationOfDate(expireDateL);
-                    }
-                    case "Manual" -> {
-                        Instant expireDateM = Instant.parse(stringStringMap.get("Expire_Date"));
-                        yield verifyExpirationOfDate(expireDateM);
                     }
                     default -> false;
                 };
