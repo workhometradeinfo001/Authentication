@@ -18,7 +18,7 @@ public class TokenVerificationController {
 
     private final TokenVerificationService service;
 
-    @PostMapping("/verify")
+    @PostMapping("/verification")
     public ResponseEntity<HttpStatus> isValidToken(@RequestBody TokenVerificationDTO dto){
         boolean result = service.tokenVerify(dto.getEmail());
         return result ? new ResponseEntity<>(HttpStatus.ACCEPTED) :

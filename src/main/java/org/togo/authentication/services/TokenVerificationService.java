@@ -42,7 +42,7 @@ public class TokenVerificationService {
                         yield loginWithFB(fbToken);
                     }
                     case "Google", "LinkedIn", "Manual" -> {
-                        Instant expireDateG = Instant.parse(stringStringMap.get("Expire_Date"));
+                        Instant expireDateG = Instant.ofEpochMilli(Long.parseLong(stringStringMap.get("Expire_Date")));
                         yield verifyExpirationOfDate(expireDateG);
                     }
                     default -> false;
