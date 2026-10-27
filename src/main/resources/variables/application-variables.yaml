@@ -11,3 +11,4 @@ cors:
     host: ${LOCAL_HOST}
   cloud:
     host: ${CLOUD_HOST}
+    login: ${CLOUD_LOGIN}

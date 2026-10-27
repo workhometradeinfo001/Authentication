@@ -25,7 +25,9 @@ public class SpringSecurity {
     @Value("${cors.local.host}")
     private String localHost;
     @Value("${cors.cloud.host}")
-    private String cloudHost;
+    private String cloudHostDashboard;
+    @Value("${cors.cloud.login}")
+    private String cloudHostLogin;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
@@ -47,8 +49,8 @@ public class SpringSecurity {
                                         .authorizationEndpoint(authorization -> authorization.authorizationRequestResolver(
                                         customAuthorizationRequestResolver(clientRegistrationRepository)
                                 ))
-                                .defaultSuccessUrl(cloudHost+"/?auth=callback", true)
-                                        .failureUrl(cloudHost)
+                                .defaultSuccessUrl(cloudHostDashboard+"/?auth=callback", true)
+                                        .failureUrl(cloudHostLogin)
                 );
             return http.build();
     }
@@ -56,7 +58,7 @@ public class SpringSecurity {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(List.of(localHost,
-                cloudHost));
+                cloudHostDashboard, cloudHostLogin));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
