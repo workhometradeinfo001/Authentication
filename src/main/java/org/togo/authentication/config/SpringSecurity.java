@@ -49,7 +49,7 @@ public class SpringSecurity {
                                         .authorizationEndpoint(authorization -> authorization.authorizationRequestResolver(
                                         customAuthorizationRequestResolver(clientRegistrationRepository)
                                 ))
-                                .defaultSuccessUrl(cloudHostDashboard+"/?auth=callback", true)
+                                .defaultSuccessUrl(cloudHostLogin+"/?auth=callback", true)
                                         .failureUrl(cloudHostLogin)
                 );
             return http.build();
