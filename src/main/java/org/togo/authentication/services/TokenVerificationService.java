@@ -25,7 +25,6 @@ public class TokenVerificationService {
     private String appFbSecret;
     private final RestClient restClient = RestClient.create();
 
-
     public boolean tokenVerify(String email){
 
         try {
@@ -41,9 +40,13 @@ public class TokenVerificationService {
                         String fbToken = stringStringMap.get("Short_Live_Token");
                         yield loginWithFB(fbToken);
                     }
-                    case "Google", "LinkedIn", "Manual" -> {
-                        Instant expireDateG = Instant.ofEpochMilli(Long.parseLong(stringStringMap.get("Expire_Date")));
-                        yield verifyExpirationOfDate(expireDateG);
+                    case "Google", "LinkedIn" -> {
+                        Instant expireDate = Instant.parse(stringStringMap.get("Expire_Date"));
+                        yield verifyExpirationOfDate(expireDate);
+                    }
+                    case "Manual" -> {
+                        Instant expireDate = Instant.ofEpochMilli(Long.parseLong(stringStringMap.get("Expire_Date")));
+                        yield verifyExpirationOfDate(expireDate);
                     }
                     default -> false;
                 };
